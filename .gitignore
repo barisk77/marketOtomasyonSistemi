@@ -1,0 +1,74 @@
+# ==========================================
+# GÜVENLİK VE GİZLİ VERİLER (Secrets & Keys)
+# ==========================================
+*.key
+*.crt
+*.pem
+server.key
+server.crt
+san.cnf
+make_cert.bat
+baslat.vbs
+sistemi_kapat.bat
+info.php
+
+# ==========================================
+# BAĞIMLILIKLAR (Dependencies)
+# ==========================================
+node_modules/
+package-lock.json
+
+# ==========================================
+# DERLEME VE YAYIN ÇIKTILARI (Build & Dist)
+# (Bu büyük dosyalar GitHub Releases'a yüklenmelidir)
+# ==========================================
+dist/
+build/
+out/
+*.exe
+*.msi
+*.zip
+*.tar.gz
+ngrok.exe
+
+# ==========================================
+# GEÇİCİ DOSYALAR, TESTLER VE ÖNBELLEKLER
+# ==========================================
+api/db_server_cache.txt
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Tek seferlik geliştirme/test betikleri
+test_*.php
+test_*.js
+ping_test.php
+scan_ports.php
+cleanup*.php
+copy*.php
+add_col.php
+check_col.php
+check_schema.php
+drop_col.php
+fix_db.php
+market_guncelle.php
+api/copy_images*.php
+
+# ==========================================
+# VERİTABANI YEDEKLERİ (Database Backups)
+# ==========================================
+*.bak
+*.mdf
+*.ldf
+
+# ==========================================
+# İŞLETİM SİSTEMİ VE EDİTÖR DOSYALARI
+# ==========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

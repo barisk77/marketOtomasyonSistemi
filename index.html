@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Yönetim Sistemi</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .home-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+        .portal-cards {
+            display: flex;
+            gap: 2rem;
+        }
+        .portal-card {
+            width: 300px;
+            padding: 3rem 2rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            background: #ffffff;
+            border-radius: 15px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .portal-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+        }
+        .portal-card i {
+            font-size: 4rem;
+            color: #3b82f6;
+        }
+        .portal-card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Cihan Market</h1>
+        <nav>
+            <a href="index.html" class="active">Ana Sayfa</a>
+        </nav>
+    </header>
+
+    <main class="home-container">
+        <div class="portal-cards">
+            <a href="pos.html?v=100" class="portal-card">
+                <i class="fas fa-cash-register"></i>
+                <h2>Satış Ekranı (POS)</h2>
+                <p>Hızlı ve kolay satış işlemlerinizi buradan gerçekleştirin.</p>
+            </a>
+            <a href="arkaofis.html?v=100" class="portal-card">
+                <i class="fas fa-chart-line"></i>
+                <h2>Arka Ofis</h2>
+                <p>Stok takibi, ürün yönetimi ve satış raporlarınıza erişin.</p>
+            </a>
+        </div>
+    </main>
+</body>
+</html>

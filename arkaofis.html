@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Arka Ofis">
+    <title>Arka Ofis - Market Otomasyon</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+    <header>
+        <h1>Cihan Market Admin</h1>
+        <nav>
+            <a href="index.html?v=100">Ana Sayfa</a>
+            <a href="pos.html?v=100">POS</a>
+            <a href="arkaofis.html?v=100" class="active">Arka Ofis</a>
+        </nav>
+    </header>
+
+    <div class="app-container">
+        <aside class="admin-sidebar glass-panel">
+            <button class="nav-btn active" onclick="adminApp.switchView('dashboard')">
+                <i class="fas fa-chart-pie"></i> Özet
+            </button>
+            <button class="nav-btn" onclick="adminApp.switchView('products')">
+                <i class="fas fa-boxes"></i> Ürün Yönetimi
+            </button>
+            <button class="nav-btn" onclick="adminApp.switchView('sales')">
+                <i class="fas fa-receipt"></i> Satış Geçmişi
+            </button>
+            <button class="nav-btn" onclick="adminApp.switchView('veresiye')">
+                <i class="fas fa-book-open"></i> Veresiye Defteri
+            </button>
+            <button class="nav-btn" onclick="adminApp.switchView('suppliers')">
+                <i class="fas fa-truck"></i> Toptancılar / Firmalar
+            </button>
+        </aside>
+
+        <main class="admin-content glass-panel" id="mainContent">
+            <!-- Content injected by JS -->
+        </main>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content glass-panel">
+            <h2 id="modalTitle">Ürün Ekle</h2>
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                <div class="form-group">
+                    <label>Ürün Adı</label>
+                    <input type="text" id="productName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Barkod</label>
+                    <input type="text" id="productBarcode" class="form-control" placeholder="Örn: 8691234567890" maxlength="13">
+                </div>
+                <div class="form-group" style="display: flex; gap: 1rem;">
+                    <div style="flex: 1;">
+                        <label>Kategori</label>
+                        <select id="productCategory" class="form-control" required>
+                            <option value="GENELSTOK">GENELSTOK</option>
+                            <option value="KURUYEMİŞ">KURUYEMİŞ</option>
+                            <option value="MANAV">MANAV</option>
+                            <option value="ŞARKÜTERİ">ŞARKÜTERİ</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>KDV Oranı</label>
+                        <select id="productTax" class="form-control" required>
+                            <option value="0">%0</option>
+                            <option value="1">%1</option>
+                            <option value="10">%10</option>
+                            <option value="20">%20</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="display: flex; gap: 1rem;">
+                    <div style="flex: 1;">
+                        <label>Fiyat (₺)</label>
+                        <input type="number" id="productPrice" class="form-control" step="0.01" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Stok Miktarı</label>
+                        <input type="number" id="productStock" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label>Resim Ekle</label>
+                    <input type="file" id="productImage" class="form-control" accept="image/png, image/jpeg, image/webp" style="padding: 0.5rem; background: rgba(255,255,255,0.05); color: #fff;">
+                </div>
+                <div class="form-group" style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; background: rgba(59, 130, 246, 0.1); padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.3);">
+                    <input type="checkbox" id="productIsQuick" style="width: 20px; height: 20px; accent-color: #3b82f6; cursor: pointer;">
+                    <label for="productIsQuick" style="margin: 0; cursor: pointer; color: #60a5fa; font-weight: bold;">
+                        <i class="fas fa-star" style="color: #f59e0b;"></i> POS Ekranında Öne Çıkar (Hızlı Ürün)
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="adminApp.closeModal()">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+
+    <!-- Kamera Tarayıcı Modal -->
+    <div id="cameraModal" class="modal">
+        <div class="modal-content glass-panel" style="max-width: 500px; text-align: center;">
+            <h2 style="margin-bottom: 1rem; color: var(--secondary-color);"><i class="fas fa-camera"></i> Kamerayla Barkod Okut</h2>
+            <div id="reader" style="width: 100%; min-height: 300px; border-radius: 8px; overflow: hidden; margin-bottom: 1rem; background: #fff;"></div>
+            <div style="text-align: center;">
+                <button class="btn btn-danger" onclick="adminApp.closeCameraScanner()" style="width: 100%;">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Satış Detay Modalı (Fiş Görünümü) -->
+    <div id="saleModal" class="modal">
+        <div class="modal-content glass-panel" style="max-width: 400px;">
+            <h2 style="text-align: center; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 1rem; margin-bottom: 1rem;">Fiş Detayı</h2>
+            <div id="saleReceiptContent" style="font-family: monospace; font-size: 1.1rem; line-height: 1.5; max-height: 60vh; overflow-y: auto; padding-right: 10px;">
+                <!-- Fiş detayları buraya gelecek -->
+            </div>
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button class="btn btn-primary" onclick="document.getElementById('saleModal').classList.remove('show')" style="width: 100%;">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Yeni Müşteri Ekle Modal -->
+    <div id="addCustomerModal" class="modal">
+        <div class="modal-content glass-panel" style="max-width: 400px;">
+            <h2 style="margin-bottom: 1rem; color: #3b82f6;"><i class="fas fa-user-plus"></i> Yeni Müşteri</h2>
+            <div class="form-group">
+                <label>Müşteri Adı Soyadı</label>
+                <input type="text" id="newCustomerInput" class="form-control" placeholder="Örn: Ahmet Yılmaz">
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="btn btn-outline" onclick="document.getElementById('addCustomerModal').classList.remove('show')" style="flex: 1;">İptal</button>
+                <button class="btn btn-primary" onclick="adminApp.confirmAddCustomer()" style="flex: 1;">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tahsilat Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content glass-panel" style="max-width: 400px;">
+            <h2 style="margin-bottom: 1rem; color: #10b981;"><i class="fas fa-hand-holding-usd"></i> Tahsilat Yap</h2>
+            <p style="margin-bottom: 1rem; font-size: 1.1rem;" id="paymentCustomerName"></p>
+            <div class="form-group">
+                <label>Tahsil Edilen Tutar (₺)</label>
+                <input type="number" id="paymentAmountInput" class="form-control" step="0.01" placeholder="0.00">
+            </div>
+            <input type="hidden" id="paymentMaxAmount">
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="btn btn-outline" onclick="document.getElementById('paymentModal').classList.remove('show')" style="flex: 1;">İptal</button>
+                <button class="btn btn-success" onclick="adminApp.confirmPayment()" style="flex: 1;">Tahsilatı Onayla</button>
+            </div>
+        </div>
+    </div>
+    <!-- Firma Detay Modal -->
+    <div id="supplierModal" class="modal">
+        <div class="modal-content glass-panel" style="max-width: 500px;">
+            <h2 id="supplierModalTitle" style="text-align: center; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 1rem; margin-bottom: 1rem; color: #3b82f6;">Firma Hesap Defteri</h2>
+            <div id="supplierTxContent" style="font-size: 1rem; line-height: 1.5; max-height: 60vh; overflow-y: auto; padding-right: 10px;">
+                <!-- Fişler js ile gelecek -->
+            </div>
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button class="btn btn-outline" onclick="document.getElementById('supplierModal').classList.remove('show')" style="width: 100%;">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firma Ekle Modal -->
+    <div id="addSupplierModal" class="modal">
+        <div class="modal-content glass-panel" style="max-width: 400px;">
+            <h2 style="margin-bottom: 1rem; color: #3b82f6;"><i class="fas fa-truck"></i> Yeni Firma Ekle</h2>
+            <div class="form-group">
+                <label>Firma / Toptancı Adı</label>
+                <input type="text" id="newSupplierInput" class="form-control" placeholder="Örn: Coca-Cola Bayisi">
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="btn btn-outline" onclick="document.getElementById('addSupplierModal').classList.remove('show')" style="flex: 1;">İptal</button>
+                <button class="btn btn-primary" onclick="adminApp.confirmAddSupplier()" style="flex: 1;">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firma Düzenle Modal -->
+    <div id="editSupplierModal" class="modal">
+        <div class="modal-content glass-panel" style="max-width: 400px;">
+            <h2 style="margin-bottom: 1rem; color: #f59e0b;"><i class="fas fa-edit"></i> Firma Düzenle</h2>
+            <input type="hidden" id="editSupplierId">
+            <div class="form-group">
+                <label>Firma / Toptancı Adı</label>
+                <input type="text" id="editSupplierNameInput" class="form-control">
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="btn btn-outline" onclick="document.getElementById('editSupplierModal').classList.remove('show')" style="flex: 1;">İptal</button>
+                <button class="btn btn-warning" onclick="adminApp.confirmEditSupplier()" style="flex: 1; color: white;">Güncelle</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firmaya Fatura / Ödeme Ekle Modal -->
+    <div id="supplierTxModal" class="modal">
+        <div class="modal-content glass-panel" style="max-width: 400px;">
+            <h2 id="supplierTxModalTitle" style="margin-bottom: 1rem; color: #3b82f6;">İşlem Ekle</h2>
+            <input type="hidden" id="supplierTxId">
+            <input type="hidden" id="supplierTxType">
+            <div class="form-group">
+                <label>Tutar (₺)</label>
+                <input type="number" id="supplierTxAmount" class="form-control" placeholder="0.00" step="0.01">
+            </div>
+            <div class="form-group">
+                <label>Açıklama / Fiş No (İsteğe Bağlı)</label>
+                <input type="text" id="supplierTxDesc" class="form-control" placeholder="Örn: Ekmek faturası">
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="btn btn-outline" onclick="document.getElementById('supplierTxModal').classList.remove('show')" style="flex: 1;">İptal</button>
+                <button class="btn btn-primary" onclick="adminApp.confirmSupplierTx()" style="flex: 1;">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div id="confirmModal" class="modal" style="z-index: 9999;">
+        <div class="modal-content glass-panel" style="max-width: 400px; text-align: center;">
+            <div style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;"><i class="fas fa-exclamation-triangle"></i></div>
+            <h2 style="margin-bottom: 1rem; color: #fff;">Emin misiniz?</h2>
+            <p id="confirmMessage" style="margin-bottom: 1.5rem; color: #94a3b8; line-height: 1.5; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;"></p>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-outline" id="confirmCancelBtn" style="flex: 1;">İptal</button>
+                <button class="btn btn-primary" id="confirmOkBtn" style="flex: 1; background: #ef4444; border-color: #ef4444;">Evet, Onaylıyorum</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/db.js?v=3.1"></script>
+    <script src="js/admin.js?v=3.1"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cacheBuster = new Date().getTime();
+            document.querySelectorAll('nav a').forEach(link => {
+                let href = link.getAttribute('href');
+                if (href && href.indexOf('?') !== -1) {
+                    href = href.split('?')[0]; 
+                    link.setAttribute('href', href + '?v=' + cacheBuster);
+                } else if (href && !href.startsWith('#')) {
+                    link.setAttribute('href', href + '?v=' + cacheBuster);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

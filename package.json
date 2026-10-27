@@ -1,0 +1,19 @@
+{
+  "name": "cihan-market-pos",
+  "version": "1.0.0",
+  "description": "Cihan Market POS & Arka Ofis Sistemi",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-packager . CihanMarket --platform=win32 --arch=x64 --out=dist/ --overwrite"
+  },
+  "author": "Cihan Market",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^43.2.0",
+    "electron-packager": "^17.1.2"
+  },
+  "dependencies": {
+    "jsdom": "^30.0.1"
+  }
+}
